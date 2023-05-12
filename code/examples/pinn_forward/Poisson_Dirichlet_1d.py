@@ -1,9 +1,15 @@
 """Backend supported: tensorflow.compat.v1, tensorflow, pytorch, paddle"""
+import sys
+
+sys.path.append('../../../code')
 import deepxde as dde
 import matplotlib.pyplot as plt
 import numpy as np
 # Import tf if using backend tensorflow.compat.v1 or tensorflow
 from deepxde.backend import tf
+#from deepxde.funzioni import fu
+
+
 # Import torch if using backend pytorch
 # import torch
 # Import paddle if using backend paddle
@@ -38,6 +44,7 @@ activation = "tanh"
 print(len(activation))
 initializer = "Glorot uniform"
 net = dde.nn.FNN(layer_size, activation, initializer)
+#fu(5)
 # net2 = dde.nn.my_NN(layer_size, activation, initializer)
 
 model = dde.Model(data, net)
@@ -69,6 +76,3 @@ plt.ylabel("PDE residual")
 plt.show()
 
 # RANDOM FEATURE METHOD
-
-
-
