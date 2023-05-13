@@ -145,7 +145,10 @@ class PDE(Data):
             )
 
         bcs_start = np.cumsum([0] + self.num_bcs)
+        print(self.num_bcs)
         bcs_start = list(map(int, bcs_start))
+        print(bcs_start)
+        print(f)
         error_f = [fi[bcs_start[-1] :] for fi in f]
         losses = [
             loss_fn[i](bkd.zeros_like(error), error) for i, error in enumerate(error_f)
@@ -154,7 +157,7 @@ class PDE(Data):
             beg, end = bcs_start[i], bcs_start[i + 1]
             # The same BC points are used for training and testing.
             error = bc.error(self.train_x, inputs, outputs, beg, end)
-            losses.append(loss_fn[len(error_f) + i](bkd.zeros_like(error), error))
+            losses.append(10*loss_fn[len(error_f) + i](bkd.zeros_like(error), error))
         return losses
 
     @run_if_all_none("train_x", "train_y", "train_aux_vars")
