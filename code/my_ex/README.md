@@ -7,7 +7,7 @@ layer_size = [1] + [M]  + [5] + [1]
 activation = ["sin", 'sin', 'linear']
 initializer = "Glorot uniform"
 
-net = dde.nn.random_FNN(layer_size, activation, initializer, Rm=10)
+net = dde.nn.random_FNN(layer_size, activation, initializer, Rm=10, b=0.0005)
 
 model = dde.Model(data, net)
 model.compile("adam", lr=0.001, metrics=["l2 relative error"])
