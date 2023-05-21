@@ -1,8 +1,8 @@
 """Package for tensorflow NN modules."""
 
-__all__ = ["DeepONetCartesianProd", "FNN", "NN", "PFNN", "PODDeepONet", "FNN_copy"]
+__all__ = ["DeepONetCartesianProd", "FNN", "NN", "PFNN", "PODDeepONet", "random_FNN"]
 
 from .deeponet import DeepONetCartesianProd, PODDeepONet
 from .fnn import FNN, PFNN
 from .nn import NN
-from .fnn_copy import FNN_copy
+from .random_fnn import random_FNN
