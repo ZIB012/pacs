@@ -154,7 +154,7 @@ class PDE(Data):
             beg, end = bcs_start[i], bcs_start[i + 1]
             # The same BC points are used for training and testing.
             error = bc.error(self.train_x, inputs, outputs, beg, end)
-            losses.append(10*loss_fn[len(error_f) + i](bkd.zeros_like(error), error))
+            losses.append(loss_fn[len(error_f) + i](bkd.zeros_like(error), error))
         return losses
 
     @run_if_all_none("train_x", "train_y", "train_aux_vars")
