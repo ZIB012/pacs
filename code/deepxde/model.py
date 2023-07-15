@@ -229,6 +229,7 @@ class Model:
             # inputs and targets are np.ndarray and automatically converted to Tensor.
             with tf.GradientTape() as tape:
                 losses = outputs_losses_train(inputs, targets, auxiliary_vars)[1]
+                #print(losses)
                 total_loss = tf.math.reduce_sum(losses)
             trainable_variables = (
                 self.net.trainable_variables + self.external_trainable_variables
