@@ -9,7 +9,6 @@ __all__ = [
     "utils",
     "Model",
     "Variable",
-    "pou_model",
 ]
 
 try:
@@ -30,7 +29,6 @@ from . import utils
 
 from .backend import Variable
 from .model import Model
-from .pou_model import pou_model
 from .utils import saveplot
 
 # Backward compatibility
