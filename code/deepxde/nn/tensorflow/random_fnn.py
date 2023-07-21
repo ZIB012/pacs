@@ -3,7 +3,7 @@ from .. import activations
 from .. import initializers
 from .. import regularizers
 from ...backend import tf
-
+import numpy as np
 
 class random_FNN(NN):
     """Fully-connected neural network."""
@@ -79,3 +79,50 @@ class random_FNN(NN):
             y = self._output_transform(inputs, y)
         return y
     
+
+
+class partioned_random_FNN(NN):
+    """Fully-connected neural network."""
+
+    def __init__(
+        self,
+        layer_sizes,
+        activation,
+        kernel_initializer,
+        npart,
+        indicatrici,  # funzione di tensorflow
+        Rm=1,
+        b=0.0005,
+        regularization=None,
+        dropout_rate=0,
+    ):
+        super().__init__()
+        self.regularizer = regularizers.get(regularization)
+        self.dropout_rate = dropout_rate
+        
+        #self.denses = np.empty(npart, dtype=object)
+
+        self.nets = [random_FNN(layer_sizes,activation,kernel_initializer,Rm,b,regularization,dropout_rate) for i in range(npart)]
+
+        self.denses = [self.nets[i].denses for i in range(npart)]
+
+        self.indicatrici = indicatrici
+        self.npart = npart
+
+    def call(self, inputs, training=False):
+
+        x = inputs
+        res = 0
+
+        for i in range(self.npart):
+            y = inputs
+            for f in self.denses[i]:
+                y = f(y, training=training)#*self.indicatrici[i](x)
+            res += y
+
+        return res
+
+        '''for f, eta in zip(self.nets, self.indicatrici):
+            res += f(y, training=training)*eta(y)
+  
+        return y'''
