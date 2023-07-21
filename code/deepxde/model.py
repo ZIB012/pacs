@@ -128,7 +128,7 @@ class Model:
             self.external_trainable_variables = external_trainable_variables
 
         if backend_name == "tensorflow.compat.v1":
-            self._compile_tensorflow_compat_v1(lr, loss_fn, decay, loss_weights)
+            self._compile_tensorflow_compat_v1(lr, loss_fn, decay, loss_weights)  # loss_fn == 'MSE'
         elif backend_name == "tensorflow":
             self._compile_tensorflow(lr, loss_fn, decay, loss_weights)
         elif backend_name == "pytorch":
