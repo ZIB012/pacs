@@ -113,11 +113,23 @@ class partioned_random_FNN(NN):
 
         x = inputs
         res = 0
-
+        #print(x)
         for i in range(self.npart):
             y = inputs
+            if self._input_transform is not None:
+                y = self._input_transform(y)
+            ind = self.indicatrici[i](x)
+            #y = tf.math.multiply(y, self.indicatrici[i](x))
+            #print(ind)
             for f in self.denses[i]:
-                y = f(y, training=training)#*self.indicatrici[i](x)
+                #y = f(y, training=training)#*self.indicatrici[i](x)
+                y = tf.math.multiply(f(y, training=training), self.indicatrici[i](x))
+                #print(y)
+                #y = tf.math.multiply(y, self.indicatrici[i](y))
+                #print(y)
+            #print(y)
+            if self._output_transform is not None:
+                y = self._output_transform(inputs, y)
             res += y
 
         return res
