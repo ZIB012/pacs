@@ -194,26 +194,20 @@ class Model:
 
         def outputs_losses(training, inputs, targets, auxiliary_vars, losses_fn):
             self.net.auxiliary_vars = auxiliary_vars
-            print('ok1')
             # Don't call outputs() decorated by @tf.function above, otherwise the
             # gradient of outputs wrt inputs will be lost here.
             outputs_ = self.net(inputs, training=training)
-            print('ok2')
             # Data losses
             losses = losses_fn(targets, outputs_, loss_fn, inputs, self)
-            print('ok3')
             if not isinstance(losses, list):
                 losses = [losses]
             # Regularization loss
-            print('ok4')
             if self.net.regularizer is not None:
                 losses += [tf.math.reduce_sum(self.net.losses)]
             losses = tf.convert_to_tensor(losses)
-            print('ok5')
             # Weighted losses
             if loss_weights is not None:
                 losses *= loss_weights
-            print('ok6')
             return outputs_, losses
 
         @tf.function(jit_compile=config.xla_jit)
@@ -235,7 +229,6 @@ class Model:
             # inputs and targets are np.ndarray and automatically converted to Tensor.
             with tf.GradientTape() as tape:
                 losses = outputs_losses_train(inputs, targets, auxiliary_vars)[1]
-                #print(losses)
                 total_loss = tf.math.reduce_sum(losses)
             trainable_variables = (
                 self.net.trainable_variables + self.external_trainable_variables
@@ -522,10 +515,7 @@ class Model:
             feed_dict = self.net.feed_dict(training, inputs, targets, auxiliary_vars)
             return self.sess.run(outputs_losses, feed_dict=feed_dict)
         if backend_name == "tensorflow":
-            print(inputs.shape)
-            print(targets.shape)
             outs = outputs_losses(inputs, targets, auxiliary_vars)
-            print('ok1')
         elif backend_name == "pytorch":
             # TODO: auxiliary_vars
             self.net.requires_grad_(requires_grad=False)

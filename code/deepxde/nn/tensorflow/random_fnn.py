@@ -90,7 +90,8 @@ class partioned_random_FNN(NN):
         activation,
         kernel_initializer,
         npart,
-        indicatrici,  # funzione di tensorflow
+        train_indicatrici,
+        test_indicatrici,  # funzione di tensorflow
         Rm=1,
         b=0.0005,
         regularization=None,
@@ -106,14 +107,18 @@ class partioned_random_FNN(NN):
 
         self.denses = [self.nets[i].denses for i in range(npart)]
 
-        self.indicatrici = indicatrici
+        self.train_indicatrici = train_indicatrici
+        self.test_indicatrici = test_indicatrici
         self.npart = npart
 
     def call(self, inputs, training=False):
 
-        x = inputs
+        '''x = inputs
         res = 0
         #print(x)
+        ones = tf.convert_to_tensor(np.ones((x.shape[0], 1), dtype="float32"))
+        print(ones)
+
         for i in range(self.npart):
             y = inputs
             if self._input_transform is not None:
@@ -121,18 +126,43 @@ class partioned_random_FNN(NN):
             ind = self.indicatrici[i](x)
             #y = tf.math.multiply(y, self.indicatrici[i](x))
             #print(ind)
+
             for f in self.denses[i]:
-                #y = f(y, training=training)#*self.indicatrici[i](x)
-                y = tf.math.multiply(f(y, training=training), self.indicatrici[i](x))
-                #print(y)
-                #y = tf.math.multiply(y, self.indicatrici[i](y))
-                #print(y)
-            #print(y)
+                y = f(y, training=training)
+                y = tf.math.multiply(y, ones)
+                #y = tf.math.multiply(y, self.indicatrici[i](x))
             if self._output_transform is not None:
                 y = self._output_transform(inputs, y)
             res += y
 
+        return res'''
+        x = inputs
+        res = 0
+
+        for i in range(self.npart):
+            y = inputs
+            if self._input_transform is not None:
+                y = self._input_transform(y)
+            if training == True:
+                ind = self.train_indicatrici[i]
+            else:
+                ind = self.test_indicatrici[i]
+            shape = ind.shape[0]
+            indicatore = np.ones((shape, 1), dtype='float32')
+            for k in range(shape):
+                indicatore[k] = ind[k]
+            indicatore = tf.convert_to_tensor(indicatore)
+
+            for f in self.denses[i]:
+                y = f(y, training=training)
+                y = tf.math.multiply(y, indicatore)
+
+            if self._output_transform is not None:
+                y = self._output_transform(inputs, y)
+
+            res += y
         return res
+
 
         '''for f, eta in zip(self.nets, self.indicatrici):
             res += f(y, training=training)*eta(y)
