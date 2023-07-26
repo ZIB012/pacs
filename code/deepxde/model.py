@@ -710,6 +710,7 @@ class Model:
         # could be that tfp.optimizer.lbfgs_minimize will start from scratch for each
         # call.
         n_iter = 0
+        display_every = 10
         while n_iter < optimizers.LBFGS_options["maxiter"]:
             self.train_state.set_data_train(
                 *self.data.train_next_batch(self.batch_size)
@@ -723,6 +724,7 @@ class Model:
             self.train_state.epoch += results.num_iterations.numpy()
             self.train_state.step += results.num_iterations.numpy()
             self._test()
+            
 
             if results.converged or results.failed:
                 break

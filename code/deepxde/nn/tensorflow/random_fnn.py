@@ -111,6 +111,9 @@ class partioned_random_FNN(NN):
         self.test_indicatrici = test_indicatrici
         self.npart = npart
 
+        self.centers = np.linspace(-1, 1, npart)
+        self.sigmas = np.full(npart, 1.0/npart)
+
     def call(self, inputs, training=False):
 
         '''x = inputs
@@ -136,6 +139,8 @@ class partioned_random_FNN(NN):
             res += y
 
         return res'''
+
+
         x = inputs
         res = 0
 
@@ -153,16 +158,14 @@ class partioned_random_FNN(NN):
                 indicatore[k] = ind[k]
             indicatore = tf.convert_to_tensor(indicatore)
 
+            k=0
             for f in self.denses[i]:
                 y = f(y, training=training)
-                y = tf.math.multiply(y, indicatore)
-
             if self._output_transform is not None:
                 y = self._output_transform(inputs, y)
-
+            y = tf.math.multiply(y, indicatore)
             res += y
         return res
-
 
         '''for f, eta in zip(self.nets, self.indicatrici):
             res += f(y, training=training)*eta(y)
