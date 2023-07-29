@@ -1,9 +1,4 @@
-- estensione 2d ---> n dimensioni
-
-- 1d partition by unit?
-
-
-
-DOMANDE
-
-- implementazione libreria ridotta o utilizzo base di questa
+simulazioni:
+    cercare soluzioni più sensate
+    completare studio Rm/M
+    

@@ -34,10 +34,11 @@ class BC(ABC):
         component: The output component satisfying this BC.
     """
 
-    def __init__(self, geom, on_boundary, component):
+    def __init__(self, geom, on_boundary, component, npart=1):
         self.geom = geom
+        self.npart = npart
         self.on_boundary = lambda x, on: np.array(
-            [on_boundary(x[i], on[i]) for i in range(len(x))]
+            [on_boundary(x[i], on[i], npart) for i in range(len(x))]
         )
         self.component = component
 
@@ -46,7 +47,7 @@ class BC(ABC):
         )
 
     def filter(self, X):
-        return X[self.on_boundary(X, self.geom.on_boundary(X))]
+        return X[self.on_boundary(X, self.geom.on_boundary(X, self.npart))]
 
     def collocation_points(self, X):
         return self.filter(X)
@@ -66,8 +67,8 @@ class BC(ABC):
 class DirichletBC(BC):
     """Dirichlet boundary conditions: y(x) = func(x)."""
 
-    def __init__(self, geom, func, on_boundary, component=0):
-        super().__init__(geom, on_boundary, component)
+    def __init__(self, geom, func, on_boundary, component=0, npart=1):
+        super().__init__(geom, on_boundary, component, npart)
         self.func = npfunc_range_autocache(utils.return_tensor(func))
 
     def error(self, X, inputs, outputs, beg, end, aux_var=None):

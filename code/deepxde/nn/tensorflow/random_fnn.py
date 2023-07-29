@@ -90,6 +90,7 @@ class partioned_random_FNN(NN):
         activation,
         kernel_initializer,
         npart,
+        nn_indicatrici,
         train_indicatrici,
         test_indicatrici,  # funzione di tensorflow
         Rm=1,
@@ -107,41 +108,43 @@ class partioned_random_FNN(NN):
 
         self.denses = [self.nets[i].denses for i in range(npart)]
 
+        self.nn_indicatrici = nn_indicatrici
         self.train_indicatrici = train_indicatrici
         self.test_indicatrici = test_indicatrici
         self.npart = npart
 
         self.centers = np.linspace(-1, 1, npart)
         self.sigmas = np.full(npart, 1.0/npart)
-
+    
     def call(self, inputs, training=False):
 
-        '''x = inputs
+        x = inputs
         res = 0
-        #print(x)
-        ones = tf.convert_to_tensor(np.ones((x.shape[0], 1), dtype="float32"))
-        print(ones)
-
+        
         for i in range(self.npart):
             y = inputs
+
             if self._input_transform is not None:
                 y = self._input_transform(y)
-            ind = self.indicatrici[i](x)
-            #y = tf.math.multiply(y, self.indicatrici[i](x))
-            #print(ind)
-
+            
             for f in self.denses[i]:
                 y = f(y, training=training)
-                y = tf.math.multiply(y, ones)
-                #y = tf.math.multiply(y, self.indicatrici[i](x))
+
             if self._output_transform is not None:
                 y = self._output_transform(inputs, y)
+            
+            if training == True:
+                wei = self.train_indicatrici[i]
+            else:
+                wei = self.test_indicatrici[i]
+            wei = tf.convert_to_tensor(wei)
+            y = tf.math.multiply(y, wei)
             res += y
 
-        return res'''
+        return res
 
 
-        x = inputs
+        '''x = inputs
         res = 0
 
         for i in range(self.npart):
@@ -165,7 +168,7 @@ class partioned_random_FNN(NN):
                 y = self._output_transform(inputs, y)
             y = tf.math.multiply(y, indicatore)
             res += y
-        return res
+        return res'''
 
         '''for f, eta in zip(self.nets, self.indicatrici):
             res += f(y, training=training)*eta(y)
