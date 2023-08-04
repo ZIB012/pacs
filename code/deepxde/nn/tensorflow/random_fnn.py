@@ -91,8 +91,8 @@ class partioned_random_FNN(NN):
         kernel_initializer,
         npart,
         nn_indicatrici,
-        train_indicatrici,
-        test_indicatrici,  # funzione di tensorflow
+        train_indicatrici=0,
+        test_indicatrici=0,  # funzione di tensorflow
         Rm=1,
         b=0.0005,
         regularization=None,
@@ -116,7 +116,8 @@ class partioned_random_FNN(NN):
         self.centers = np.linspace(-1, 1, npart)
         self.sigmas = np.full(npart, 1.0/npart)
     
-    def call(self, inputs, training=False):
+
+    '''def __call__(self, inputs, training=False):
 
         x = inputs
         res = 0
@@ -141,10 +142,10 @@ class partioned_random_FNN(NN):
             y = tf.math.multiply(y, wei)
             res += y
 
-        return res
+        return res'''
 
 
-        '''x = inputs
+    '''x = inputs
         res = 0
 
         for i in range(self.npart):
@@ -161,6 +162,7 @@ class partioned_random_FNN(NN):
                 indicatore[k] = ind[k]
             indicatore = tf.convert_to_tensor(indicatore)
 
+            indicatore = self.nn_indicatrici[i](x)
             k=0
             for f in self.denses[i]:
                 y = f(y, training=training)
@@ -170,7 +172,33 @@ class partioned_random_FNN(NN):
             res += y
         return res'''
 
-        '''for f, eta in zip(self.nets, self.indicatrici):
+    '''for f, eta in zip(self.nets, self.indicatrici):
             res += f(y, training=training)*eta(y)
   
         return y'''
+
+
+
+    def __call__(self, inputs, training=True):
+
+        x = inputs
+        res = 0
+
+        for i in range(self.npart):
+            y = inputs
+            
+            indicatore = self.nn_indicatrici[i](x)
+            
+            if self._input_transform is not None:
+                y = self._input_transform(y)
+
+            for f in self.denses[i]:
+                y = f(y, training=training)
+
+            if self._output_transform is not None:
+                y = self._output_transform(inputs, y)
+
+            y = tf.math.multiply(y, indicatore)
+            res += y
+
+        return res

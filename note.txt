@@ -2,3 +2,9 @@ simulazioni:
     cercare soluzioni più sensate
     completare studio Rm/M
     
+
+
+InvalidArgumentError: Graph execution error:
+
+The second input must be a scalar, but it has shape [20]
+	 [[{{node partioned_random_fnn/cond_1/switch_pred/_11}}]] [Op:__inference_outputs_losses_train_738]
