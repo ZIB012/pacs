@@ -4,6 +4,7 @@ from .. import initializers
 from .. import regularizers
 from ...backend import tf
 import numpy as np
+import matplotlib.pyplot as plt
 
 class random_FNN(NN):
     """Fully-connected neural network."""
@@ -104,9 +105,9 @@ class partioned_random_FNN(NN):
         
         #self.denses = np.empty(npart, dtype=object)
 
-        self.nets = [random_FNN(layer_sizes,activation,kernel_initializer,Rm,b,regularization,dropout_rate) for i in range(npart)]
+        self.nets = [random_FNN(layer_sizes,activation,kernel_initializer,Rm,b,regularization,dropout_rate) for i in range(npart+2)]
 
-        self.denses = [self.nets[i].denses for i in range(npart)]
+        self.denses = [self.nets[i].denses for i in range(npart+2)]
 
         self.nn_indicatrici = nn_indicatrici
         self.train_indicatrici = train_indicatrici
@@ -183,12 +184,10 @@ class partioned_random_FNN(NN):
 
         x = inputs
         res = 0
-
-        for i in range(self.npart):
+        for i in range(self.npart+2):
             y = inputs
-            
             indicatore = self.nn_indicatrici[i](x)
-            
+
             if self._input_transform is not None:
                 y = self._input_transform(y)
 
@@ -200,5 +199,4 @@ class partioned_random_FNN(NN):
 
             y = tf.math.multiply(y, indicatore)
             res += y
-
         return res
