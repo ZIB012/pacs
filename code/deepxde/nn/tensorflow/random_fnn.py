@@ -105,9 +105,9 @@ class partioned_random_FNN(NN):
         
         #self.denses = np.empty(npart, dtype=object)
 
-        self.nets = [random_FNN(layer_sizes,activation,kernel_initializer,Rm,b,regularization,dropout_rate) for i in range(npart+2)]
+        self.nets = [random_FNN(layer_sizes,activation,kernel_initializer,Rm,b,regularization,dropout_rate) for i in range(npart)]
 
-        self.denses = [self.nets[i].denses for i in range(npart+2)]
+        self.denses = [self.nets[i].denses for i in range(npart)]
 
         self.nn_indicatrici = nn_indicatrici
         self.train_indicatrici = train_indicatrici
@@ -184,7 +184,7 @@ class partioned_random_FNN(NN):
 
         x = inputs
         res = 0
-        for i in range(self.npart+2):
+        for i in range(self.npart):
             y = inputs
             indicatore = self.nn_indicatrici[i](x)
 
