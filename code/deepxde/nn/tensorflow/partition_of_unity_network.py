@@ -6,57 +6,39 @@ from .. import regularizers
 from ...backend import tf
 import numpy as np
 
-def psi_a(x):
-    arr = np.ones((x.shape[0],1), dtype='float32')
-    for i in range(x.shape[0]):
-        if x[i] < -5/4 or x[i] > 5/4:
-            arr[i] = 0
-        elif x[i] >= 3/4 and x[i] <= 5/4:
-            arr[i] = (1 - np.sin(2*np.pi*x[i]))/2
-    return arr
+def func_dx(x, a=0):
+    c1 = - 0.16171875
+    res = (c1 + 1/5*(x-a)**5 - (x-a)**4 + 47/24*(x-a)**3 - 15/8*(x-a)**2 + 225/256*(x-a))/0.001041666666667
+    return res
 
-def psi_b(x):
-    arr = np.ones((x.shape[0],1), dtype='float32')
-    for i in range(x.shape[0]):
-        if x[i] < -5/4 or x[i] > 5/4:
-            arr[i] = 0
-        elif x[i] >= -5/4 and x[i] <= -3/4:
-            arr[i] = (1 + np.sin(2*np.pi*x[i]))/2
-        elif x[i] >= 3/4 and x[i] <= 5/4:
-            arr[i] = (1 - np.sin(2*np.pi*x[i]))/2
-    
-    return arr
+def func_sx(x, a=0):
+    c2 =  0.1627604166666665
+    res = (c2 + 1/5*(x-a)**5 + (x-a)**4 + 47/24*(x-a)**3 + 15/8*(x-a)**2 + 225/256*(x-a))/0.001041666666666
+    return res
 
-def psi_c(x):
-    arr = np.ones((x.shape[0],1), dtype='float32')
-    for i in range(x.shape[0]):
-        if x[i] < -5/4 or x[i] > 5/4:
-            arr[i] = 0
-        elif x[i] >= -5/4 and x[i] <= -3/4:
-            arr[i] = (1 + np.sin(2*np.pi*x[i]))/2
-        
-    return arr
+def pou(x, a=-1, b=1, lim_sx=-1, lim_dx=1):
+    return tf.clip_by_value(1-func_dx(x, b-lim_dx), 0.0, 1.0) + tf.clip_by_value(func_sx(x, a-lim_sx), 0.0, 1.0) - 1
 
-def indicatrice_a(a,b):
-    return lambda x: psi_a((2*x-b-a)/(b-a))
+def pou_dx(x, b=1, uno=1.5, lim_dx=1):
+    return tf.clip_by_value(func_sx(x, b-lim_dx+uno), 0.0, 1.0)# + tf.clip_by_value(func_sx(x,uno), 0.0, 1.0)
 
-def indicatrice_b(a,b):
-    return lambda x: psi_b((2*x-b-a)/(b-a))
+def pou_sx(x, a=-1, uno=1.5, lim_sx=-1):
+    return tf.clip_by_value(1-func_dx(x, a-lim_sx-uno), 0.0, 1.0)
 
-def indicatrice_c(a,b):
-    return lambda x: psi_c((2*x-b-a)/(b-a))
+def indicatrice(lim_sx, lim_dx, a, b, npart, i):
+    if i == 0:
+        return lambda x: pou_sx(x, a, np.abs(b) + (2 + lim_sx))
+    elif i == npart-1:
+        return lambda x: pou_dx(x, b, np.abs(a) + (2 - lim_dx))
+    else:
+        return lambda x: pou(x, a, b)
 
-def partition_of_unity(npart, geom, data, layer_size, activation, initializer, Rm, b=0.0005):
-
-    arr = np.linspace(geom.l, geom.r, npart + 1)
-    nn_indicatrici = [indicatrice_b(arr[i], arr[i+1]) for i in range(1,npart-1)]
-    nn_indicatrici.append(indicatrice_c(arr[-2], arr[-1]))
-    nn_indicatrici.insert(0, indicatrice_a(arr[0], arr[1]))
-
-    train_indicatrici = [nn_indicatrici[i](data.train_x) for i in range(npart)]
-    test_indicatrici = [nn_indicatrici[i](data.test_x) for i in range(npart)]
-
-    net = partioned_random_FNN(layer_size, activation, initializer, npart, nn_indicatrici, train_indicatrici, test_indicatrici, Rm=Rm, b=b)
-
-    return net
-
+def pou_indicators(geom, npart):
+    lim_dx = geom.r
+    lim_sx = geom.l
+    total = lim_dx - lim_sx
+    arr = np.linspace(lim_sx, lim_dx, npart+1)
+    res = []
+    for i in range(npart):
+        res.append(indicatrice(lim_sx, lim_dx, arr[i], arr[i+1], npart, i))
+    return res
