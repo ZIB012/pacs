@@ -14,12 +14,9 @@ class Interval(Geometry):
     def inside(self, x):
         return np.logical_and(self.l <= x, x <= self.r).flatten()
 
-    def on_boundary(self, x, npart=1):
-        if npart == 1:
-            return np.any(isclose(x, [self.l, self.r]), axis=-1)
-        else:
-            pou_x = np.linspace(self.l, self.r, npart+1)
-            return np.any(isclose(x, pou_x), axis=-1)
+    def on_boundary(self, x):
+        return np.any(isclose(x, [self.l, self.r]), axis=-1)
+ 
 
     def distance2boundary(self, x, dirn):
         return x - self.l if dirn < 0 else self.r - x

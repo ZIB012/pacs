@@ -22,41 +22,39 @@ class random_FNN(NN):
         super().__init__()
         self.regularizer = regularizers.get(regularization)
         self.dropout_rate = dropout_rate
-
         self.denses = []
         if isinstance(activation, list):
             if not (len(layer_sizes) - 1) == len(activation):
                 raise ValueError(
                     "Total number of activation functions do not match with sum of hidden layers and output layer!"
                 )
-            activation = list(map(activations.get, activation))
+            fun_activation = list(map(activations.get, activation))
         else:
-            activation = activations.get(activation)
+            fun_activation = activations.get(activation)
         initializer = initializers.get(kernel_initializer)
         for j, units in enumerate(layer_sizes[1:-1]):
-            freeze = True
-            init = initializer
-            bias = "zeros"
-            if j == 0:
-                freeze = False
+
+            if activation[j] == 'random_sin' or activation[j] == 'random_tanh':
+                free = False
                 init = tf.keras.initializers.RandomUniform(minval=-Rm, maxval=Rm)
                 bias = tf.keras.initializers.RandomUniform(minval=-b, maxval=b)
             else:
-                freeze = True
+                free = True
                 init = initializer
                 bias = "zeros"
+
             self.denses.append(
                 tf.keras.layers.Dense(
                     units,
                     activation=(
-                        activation[j]
-                        if isinstance(activation, list)
-                        else activation
+                        fun_activation[j]
+                        if isinstance(fun_activation, list)
+                        else fun_activation
                     ),
                     kernel_initializer=init,
                     kernel_regularizer=self.regularizer,
                     bias_initializer=bias, 
-                    trainable=freeze,
+                    trainable=free,
                 )
             )
             if self.dropout_rate > 0:
@@ -70,7 +68,7 @@ class random_FNN(NN):
             )
         )
 
-    def call(self, inputs, training=False):
+    def __call__(self, inputs, training=False):
         y = inputs
         if self._input_transform is not None:
             y = self._input_transform(y)
@@ -92,8 +90,6 @@ class partioned_random_FNN(NN):
         kernel_initializer,
         npart,
         nn_indicatrici,
-        train_indicatrici=0,
-        test_indicatrici=0,  # funzione di tensorflow
         Rm=1,
         b=0.0005,
         regularization=None,
@@ -103,21 +99,14 @@ class partioned_random_FNN(NN):
         self.regularizer = regularizers.get(regularization)
         self.dropout_rate = dropout_rate
         
-        #self.denses = np.empty(npart, dtype=object)
-
         self.nets = [random_FNN(layer_sizes,activation,kernel_initializer,Rm,b,regularization,dropout_rate) for i in range(npart)]
 
         self.denses = [self.nets[i].denses for i in range(npart)]
 
         self.nn_indicatrici = nn_indicatrici
-        self.train_indicatrici = train_indicatrici
-        self.test_indicatrici = test_indicatrici
+
         self.npart = npart
-
-        self.centers = np.linspace(-1, 1, npart)
-        self.sigmas = np.full(npart, 1.0/npart)
     
-
     '''def __call__(self, inputs, training=False):
 
         x = inputs

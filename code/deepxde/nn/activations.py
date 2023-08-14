@@ -58,6 +58,8 @@ def get(identifier):
             "swish": bkd.silu,
             "tanh": bkd.tanh,
             "linear": linear,
+            "random_sin": bkd.sin,
+            "random_tanh": bkd.tanh,
         }[identifier]
     if callable(identifier):
         return identifier

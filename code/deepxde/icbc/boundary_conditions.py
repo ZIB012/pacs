@@ -38,7 +38,7 @@ class BC(ABC):
         self.geom = geom
         self.npart = npart
         self.on_boundary = lambda x, on: np.array(
-            [on_boundary(x[i], on[i], npart) for i in range(len(x))]
+            [on_boundary(x[i], on[i]) for i in range(len(x))]
         )
         self.component = component
 
@@ -47,7 +47,7 @@ class BC(ABC):
         )
 
     def filter(self, X):
-        return X[self.on_boundary(X, self.geom.on_boundary(X, self.npart))]
+        return X[self.on_boundary(X, self.geom.on_boundary(X))]
 
     def collocation_points(self, X):
         return self.filter(X)

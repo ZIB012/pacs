@@ -75,4 +75,3 @@ plt.xlabel("x")
 plt.ylabel("PDE residual")
 plt.show()
 
-# RANDOM FEATURE METHOD
