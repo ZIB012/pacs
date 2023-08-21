@@ -1,5 +1,5 @@
 from .nn import NN
-from .random_fnn import partioned_random_FNN
+from .random_fnn import partition_random_FNN
 from .. import activations
 from .. import initializers
 from .. import regularizers

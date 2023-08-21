@@ -7,12 +7,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 class random_FNN(NN):
-    """Fully-connected neural network."""
+    """Random fully-connected neural network."""
 
     def __init__(
         self,
-        layer_sizes,
-        activation,
+        layer_sizes,           # list of numerical strings
+        activation,            # list of strings
         kernel_initializer,
         Rm=1,
         b=0.0005,
@@ -32,6 +32,7 @@ class random_FNN(NN):
         else:
             fun_activation = activations.get(activation)
         initializer = initializers.get(kernel_initializer)
+        # iteration over the list layer_sizes
         for j, units in enumerate(layer_sizes[1:-1]):
 
             if activation[j] == 'random_sin' or activation[j] == 'random_tanh':
@@ -80,8 +81,8 @@ class random_FNN(NN):
     
 
 
-class partioned_random_FNN(NN):
-    """Fully-connected neural network."""
+class partition_random_FNN(NN):
+    """Partitioned random fully-connected neural network."""
 
     def __init__(
         self,
@@ -89,7 +90,7 @@ class partioned_random_FNN(NN):
         activation,
         kernel_initializer,
         npart,
-        nn_indicatrici,
+        nn_ind,
         Rm=1,
         b=0.0005,
         regularization=None,
@@ -103,70 +104,9 @@ class partioned_random_FNN(NN):
 
         self.denses = [self.nets[i].denses for i in range(npart)]
 
-        self.nn_indicatrici = nn_indicatrici
+        self.nn_ind = nn_ind
 
         self.npart = npart
-    
-    '''def __call__(self, inputs, training=False):
-
-        x = inputs
-        res = 0
-        
-        for i in range(self.npart):
-            y = inputs
-
-            if self._input_transform is not None:
-                y = self._input_transform(y)
-            
-            for f in self.denses[i]:
-                y = f(y, training=training)
-
-            if self._output_transform is not None:
-                y = self._output_transform(inputs, y)
-            
-            if training == True:
-                wei = self.train_indicatrici[i]
-            else:
-                wei = self.test_indicatrici[i]
-            wei = tf.convert_to_tensor(wei)
-            y = tf.math.multiply(y, wei)
-            res += y
-
-        return res'''
-
-
-    '''x = inputs
-        res = 0
-
-        for i in range(self.npart):
-            y = inputs
-            if self._input_transform is not None:
-                y = self._input_transform(y)
-            if training == True:
-                ind = self.train_indicatrici[i]
-            else:
-                ind = self.test_indicatrici[i]
-            shape = ind.shape[0]
-            indicatore = np.ones((shape, 1), dtype='float32')
-            for k in range(shape):
-                indicatore[k] = ind[k]
-            indicatore = tf.convert_to_tensor(indicatore)
-
-            indicatore = self.nn_indicatrici[i](x)
-            k=0
-            for f in self.denses[i]:
-                y = f(y, training=training)
-            if self._output_transform is not None:
-                y = self._output_transform(inputs, y)
-            y = tf.math.multiply(y, indicatore)
-            res += y
-        return res'''
-
-    '''for f, eta in zip(self.nets, self.indicatrici):
-            res += f(y, training=training)*eta(y)
-  
-        return y'''
-
 
 
     def __call__(self, inputs, training=True):
@@ -175,7 +115,7 @@ class partioned_random_FNN(NN):
         res = 0
         for i in range(self.npart):
             y = inputs
-            indicatore = self.nn_indicatrici[i](x)
+            indicator = self.nn_ind[i](x)
 
             if self._input_transform is not None:
                 y = self._input_transform(y)
@@ -186,6 +126,6 @@ class partioned_random_FNN(NN):
             if self._output_transform is not None:
                 y = self._output_transform(inputs, y)
 
-            y = tf.math.multiply(y, indicatore)
+            y = tf.math.multiply(y, indicator)
             res += y
         return res
