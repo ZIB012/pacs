@@ -27,7 +27,13 @@ random feature with partition of unity method (partition_random_FNN), which is a
 ![](images/deepxde.png)
 ##
 ## Installation
-DeepXDE requires one of the following backend-specific dependencies to be installed:
+Clone the [raNNdom](https://github.com/ZIB012/raNNdom) GitHub repository:
+
+```
+git clone https://github.com/ZIB012/raNNdom.git
+```
+
+The library requires one of the following backend-specific dependencies to be installed:
 
 - TensorFlow 1.x: [TensorFlow](https://www.tensorflow.org)>=2.7.0
 - TensorFlow 2.x: [TensorFlow](https://www.tensorflow.org)>=2.2.0, [TensorFlow Probability](https://www.tensorflow.org/probability)>=0.10.0
@@ -35,20 +41,20 @@ DeepXDE requires one of the following backend-specific dependencies to be instal
 - JAX: [JAX](https://jax.readthedocs.io), [Flax](https://flax.readthedocs.io), [Optax](https://optax.readthedocs.io)
 - PaddlePaddle: [PaddlePaddle](https://www.paddlepaddle.org.cn/en) ([develop version](https://www.paddlepaddle.org.cn/en/install/quick?docurl=/documentation/docs/en/develop/install/pip/linux-pip_en.html))
 
-## Anaconda setup
+### 1. Anaconda setup (Recommended)
 In order to work with the library, it's suggested to use anaconda and create a new conda environment in which downloading all the dependencies needed:
 ```
 conda create --name random
 
 conda activate random
 ```
-## Automatic installation with requirements.txt (supported: windows 64)
+#### 1.1 Automatic installation with requirements.txt (supported: windows 64)
 In the anaconda terminal, go to the library repository, and then install all the dependencies ones using:
 ```
 conda install --force-reinstall -y -q --name random -c conda-forge --file requirements.txt
 ```
 
-## Manual installation
+#### 1.2 Manual installation
 Install in the conda environment the tensor backend you want to use. 
 
 Our Random Feature Method is supported by TensorFlow 2.x: [TensorFlow](https://www.tensorflow.org)>=2.2.0, [TensorFlow Probability](https://www.tensorflow.org/probability)>=0.10.0
@@ -73,13 +79,20 @@ conda install -c conda-forge scikit-optimize
 conda install -c anaconda scipy
 ```
 
-##
-Clone the [raNNdom](https://github.com/ZIB012/raNNdom) GitHub repository:
+## 2. Pip setup
+If you prefer to use pip to install the packages and run the repository:
+
 ```
-git clone https://github.com/ZIB012/raNNdom.git
+pip install tensorflow
+pip install tensorflow-probability
+
+pip install numpy
+pip install matplotlib
+pip install scikit-learn
+pip install scikit-optimize
+pip install scipy
 ```
 
-## 
 ## 
 
 
