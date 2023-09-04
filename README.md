@@ -49,6 +49,15 @@ conda install --force-reinstall -y -q --name random -c conda-forge --file requir
 ```
 
 ## Manual installation
+Install in the conda environment the tensor backend you want to use. 
+
+Our Random Feature Method is supported by TensorFlow 2.x: [TensorFlow](https://www.tensorflow.org)>=2.2.0, [TensorFlow Probability](https://www.tensorflow.org/probability)>=0.10.0
+
+```
+conda install -c conda-forge tensorflow
+conda install -c conda-forge tensorflow-probability
+```
+
 Install in the conda environment the basic python libraries needed to run the repository examples:
 - [Matplotlib](https://matplotlib.org/)
 - [NumPy](https://numpy.org/install/)
@@ -62,9 +71,6 @@ conda install -c anaconda numpy
 conda install -c anaconda scikit-learn
 conda install -c conda-forge scikit-optimize
 conda install -c anaconda scipy
-
-conda install -c conda-forge tensorflow
-conda install -c conda-forge tensorflow-probability
 ```
 
 ##
