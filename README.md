@@ -4,6 +4,8 @@
 
 It includes the possiblity to solve different problems using the Random Feature Method, applied to physiscs-informed neural network.
 
+![](images/random.png)
+
 Some problems that can be solved with this method are:
 - forward/inverse ordinary/partial differential equations
 - forward/inverse integro-differential equations
