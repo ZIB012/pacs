@@ -34,16 +34,21 @@ DeepXDE requires one of the following backend-specific dependencies to be instal
 - PyTorch: [PyTorch](https://pytorch.org)>=1.9.0
 - JAX: [JAX](https://jax.readthedocs.io), [Flax](https://flax.readthedocs.io), [Optax](https://optax.readthedocs.io)
 - PaddlePaddle: [PaddlePaddle](https://www.paddlepaddle.org.cn/en) ([develop version](https://www.paddlepaddle.org.cn/en/install/quick?docurl=/documentation/docs/en/develop/install/pip/linux-pip_en.html))
-  
-##
+
+## 
 In order to work with the library, it's suggested to use anaconda and create a new conda environment in which downloading all the dependencies needed:
 ```
 conda create --name random
 
 conda activate random
 ```
+## Automatic installation with requirements.txt (supported: windows 64)
+In the anaconda terminal, go to the library repository, and then install all the dependencies ones using:
+```
+conda install --force-reinstall -y -q --name random -c conda-forge --file requirements.txt
+```
 
-##
+## Manual installation
 Install in the conda environment the basic python libraries needed to run the repository examples:
 - [Matplotlib](https://matplotlib.org/)
 - [NumPy](https://numpy.org/install/)
@@ -52,11 +57,14 @@ Install in the conda environment the basic python libraries needed to run the re
 - [SciPy](https://scipy.org/)
 
 ```
-conda install matplotlib
-conda install numpy
+conda install -c conda-forge matplotlib
+conda install -c anaconda numpy
 conda install -c anaconda scikit-learn
 conda install -c conda-forge scikit-optimize
 conda install -c anaconda scipy
+
+conda install -c conda-forge tensorflow
+conda install -c conda-forge tensorflow-probability
 ```
 
 ##
