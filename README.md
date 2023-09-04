@@ -14,7 +14,7 @@ Some problems that can be solved with this method are:
 The library supports five tensor libraries as backends: TensorFlow 1.x, TensorFlow 2.x, PyTorch, JAX, and PaddlePaddle. 
 
 While the Random Feature Method is supported only by Tensorflow 2.x
-
+##
 ## Features
 - complex domain geometries: The primitive geometries are interval, triangle, rectangle, polygon, disk, ellipse, star-shaped, cuboid, sphere, hypercube, and hypersphere. Other geometries can be constructed as constructive solid geometry (CSG) using three boolean operations: union, difference, and intersection. It also supports a geometry represented by a point cloud.
 - 5 types of boundary conditions (BCs): Dirichlet, Neumann, Robin, periodic, and a general BC, which can be defined on an arbitrary domain or on a point set
@@ -25,6 +25,7 @@ random feature with partition of unity method (partition_random_FNN), which is a
 - callbacks to monitor the internal states and statistics of the model during training: early stopping, etc.
 
 ![](images/deepxde.png)
+##
 ## Installation
 DeepXDE requires one of the following backend-specific dependencies to be installed:
 
@@ -50,12 +51,22 @@ Install in the conda environment the basic python libraries needed to run the re
 - [scikit-optimize](https://github.com/scikit-optimize/scikit-optimize.git)
 - [SciPy](https://scipy.org/)
 
+```
+conda install matplotlib
+conda install numpy
+conda install -c anaconda scikit-learn
+conda install -c conda-forge scikit-optimize
+conda install -c anaconda scipy
+```
+
 ##
 Clone the [raNNdom](https://github.com/ZIB012/raNNdom) GitHub repository:
 ```
 git clone https://github.com/ZIB012/raNNdom.git
 ```
 
+## 
+## 
 
 
 
