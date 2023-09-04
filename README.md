@@ -35,7 +35,7 @@ DeepXDE requires one of the following backend-specific dependencies to be instal
 - JAX: [JAX](https://jax.readthedocs.io), [Flax](https://flax.readthedocs.io), [Optax](https://optax.readthedocs.io)
 - PaddlePaddle: [PaddlePaddle](https://www.paddlepaddle.org.cn/en) ([develop version](https://www.paddlepaddle.org.cn/en/install/quick?docurl=/documentation/docs/en/develop/install/pip/linux-pip_en.html))
 
-## 
+## Anaconda setup
 In order to work with the library, it's suggested to use anaconda and create a new conda environment in which downloading all the dependencies needed:
 ```
 conda create --name random
