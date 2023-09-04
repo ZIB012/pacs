@@ -22,6 +22,7 @@ random feature with partition of unity method (partition_random_FNN), which is a
 - different optimizers: Adam, L-BFGS, etc.
 - callbacks to monitor the internal states and statistics of the model during training: early stopping, etc.
 
+![](images/deepxde.png)
 ## Installation
 DeepXDE requires one of the following backend-specific dependencies to be installed:
 
